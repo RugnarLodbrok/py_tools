@@ -20,6 +20,9 @@ from threading import Timer
 from py_tools import logger
 from py_tools.frozen import request_get
 
+WINDOWS = sys.platform == 'win32'
+LINUX = sys.platform == 'linux'
+
 
 def identity(x):
     return x
