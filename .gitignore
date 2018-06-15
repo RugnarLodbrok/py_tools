@@ -2,3 +2,4 @@
 build
 dist
 py_tools.egg-info
+vim.exe.stackdump
