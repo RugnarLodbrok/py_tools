@@ -10,7 +10,8 @@ from threading import Thread
 from mock import MagicMock
 from time import sleep
 
-from py_tools.common import ignore_bad_chars, conj, exc_to_queue
+from py_tools.common import ignore_bad_chars, exc_to_queue
+from py_tools.seq import conj
 from py_tools.exceptions import StructException
 from py_tools import logger
 
