@@ -8,8 +8,6 @@ from contextlib import contextmanager
 from structlog.processors import JSONRenderer
 from structlog.stdlib import LoggerFactory, filter_by_level
 
-from common import format_dict
-
 
 def info(*args, **kwargs):
     _logger.info(*args, **kwargs)
@@ -101,6 +99,10 @@ def basic_setup():
 
     _logger = Logger()
     _logger.add_handler(h)
+
+
+def format_dict(d, indent=''):
+    return '\n'.join('{}{}: {}'.format(indent, k, v) for k, v in d.items())
 
 
 class StructFormatter(lg.Formatter):
