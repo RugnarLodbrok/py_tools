@@ -13,7 +13,7 @@ class ExcInfo:
         self.exc_tb = exc_tb
 
 
-def check_exception_value(v):
+def _check_exception_value(v):
     if isinstance(v, tuple) and len(v) == 3 and issubclass(v[0], Exception):
         raise v[1]
 
@@ -68,9 +68,8 @@ class RoundOutBuffer:
             if w > 10:
                 print('stuck on setitem')
                 raise RuntimeError(
-                    "stuck on setitem\nkey: {} self.i: {}\n{}\nfree_slots: {}\ndata: {}:".format(key, self.i,
-                                                                                                 self.set_indices[-20:],
-                                                                                                 self.data_exists))
+                    "stuck on setitem\nkey: {} self.i: {}\n{}\nfree_slots: {}\ndata: {}:".format(
+                        key, self.i, "", self.set_indices[-20:], self.data_exists))
             if not self._open:
                 return
             w += 1
@@ -109,7 +108,7 @@ class RoundOutBuffer:
                 self.data_exists[idx] = False
                 self.i = i + 1
                 if self.raise_on_error:
-                    check_exception_value(v)
+                    _check_exception_value(v)
 
                 yield v
 
