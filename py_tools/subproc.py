@@ -10,7 +10,8 @@ from threading import Thread
 from mock import MagicMock
 from time import sleep
 
-from py_tools.common import ignore_bad_chars, exc_to_queue
+from py_tools.common import replace_bad_chars
+from py_tools.concurrency import ExcToQueue
 from py_tools.seq import conj
 from py_tools.exceptions import StructException
 from py_tools import logger
@@ -213,11 +214,11 @@ class Command:
 
         exc_q = Queue()
 
-        @exc_to_queue(exc_q)
+        @ExcToQueue(exc_q)
         def subprocess_thread():
             p.wait()
 
-        @exc_to_queue(exc_q)
+        @ExcToQueue(exc_q)
         def stdout_thread(stream, target):
             while stream:
                 o = stream.readline()
@@ -225,7 +226,7 @@ class Command:
                     o_decoded = self.safe_decode(o)
                     if self._write_stdout:
                         try:
-                            sys.stdout.write(ignore_bad_chars(o_decoded))
+                            sys.stdout.write(replace_bad_chars(o_decoded))
                         except:
                             sys.stdout.write("<couldn't write line to stdout>")
                     target.append(o_decoded)
