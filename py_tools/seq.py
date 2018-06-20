@@ -20,6 +20,11 @@ def conj(seq, v):
     yield v
 
 
+def cons(v, seq):
+    yield v
+    yield from seq
+
+
 def zip_nth(seq, n=0):
     return nth(zip(*seq), n, default=[])
 
