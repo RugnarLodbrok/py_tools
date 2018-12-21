@@ -78,21 +78,6 @@ class EmptyClass(object):
     pass
 
 
-class Index:
-    def __init__(self, lst=None):
-        self._map = {}
-        self.reverse_map = []
-        if lst:
-            for i in lst:
-                x = self[i]
-
-    def __getitem__(self, item):
-        if item not in self._map:
-            self._map[item] = len(self.reverse_map)
-            self.reverse_map.append(item)
-        return self._map[item]
-
-
 def capitalize(s):
     return s[0].upper() + s[1:]
 

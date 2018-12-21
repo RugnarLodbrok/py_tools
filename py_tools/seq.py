@@ -1,10 +1,14 @@
-from copy import deepcopy
-from functools import reduce, partial, wraps
-from itertools import islice
-
 from collections import deque
+from functools import partial, wraps, reduce
+from itertools import islice, tee
+from copy import deepcopy
 
-from py_tools.common import identity
+
+def identity(x):
+    return x
+
+
+filter_non_empty = partial(filter, identity)
 
 
 def last(seq):
@@ -13,6 +17,12 @@ def last(seq):
 
 def first(seq):
     return next(iter(seq))
+
+
+def rest(seq):
+    i = iter(seq)
+    next(i)
+    return i
 
 
 def conj(seq, v):
@@ -33,10 +43,10 @@ def nth(iterable, n, default=None):
     return next(islice(iterable, n, None), default)
 
 
-def pairwise(iterable):
-    "s -> (s0, s1), (s2, s3), (s4, s5), ..."
-    a = iter(iterable)
-    return zip(a, a)
+def pairwise(seq):
+    a, b = tee(seq)
+    next(b)
+    yield from zip(a, b)
 
 
 def grouped(iterable, n):
@@ -105,9 +115,6 @@ class defaultdict2(dict):
             v = self._foo(item)
             self[item] = v
             return v
-
-
-filter_some = partial(filter, identity)
 
 
 class key_list(list):
