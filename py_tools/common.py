@@ -1,5 +1,4 @@
 import inspect
-import re
 import sys
 import time
 from contextlib import contextmanager
@@ -16,7 +15,6 @@ def identity(x):
 
 
 def retry(n=3, reraise=True, exc_type=None, sleep=None):
-    from py_tools import logger
     def dec(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
@@ -25,7 +23,7 @@ def retry(n=3, reraise=True, exc_type=None, sleep=None):
                 try:
                     return f(*args, **kwargs)
                 except exc_type or Exception as e:
-                    logger.info("sleep before retry", seconds=sleep, error=str(e), function=f.__name__)
+                    # logger.info("sleep before retry", seconds=sleep, error=str(e), function=f.__name__)
                     err = e
                     if sleep:
                         time.sleep(sleep)
