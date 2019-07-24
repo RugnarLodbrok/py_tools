@@ -43,9 +43,6 @@ def working_dir(p, force_create=False, finally_remove=False, create_empty=False)
             shutil.rmtree(p)
 
 
-WorkingDir = working_dir
-
-
 def handle_remove_readonly(func, path, exc):
     exc_class, exc_value, tb = exc
     if func in (os.rmdir, os.remove, os.unlink) and exc_value.errno == errno.EACCES:
@@ -86,7 +83,7 @@ def zip_dir(src, name=None):
     assert os.path.isdir(src), "{} is expected to be a directory".format(src)
     f_name = (name or os.path.basename(src)) + '.zip'
     with ZipFile(f_name, 'w', ZIP_DEFLATED) as f:
-        with WorkingDir(src):
+        with working_dir(src):
             for fn in walk_files('.'):
                 f.write(fn)
     return f_name
@@ -110,7 +107,7 @@ def safe_create_dir(dir_name):
 
 
 def empty_dir(dir_name, ignore_errors=False):
-    with WorkingDir(dir_name):
+    with working_dir(dir_name):
         for name in os.listdir('.'):
             if os.path.isfile(name):
                 rm = os.unlink
@@ -165,7 +162,7 @@ def delete_dir(dir_path, onerror='raise', retry=True):
         onerror_f = handle_remove_readonly
     parent, dir_name = os.path.split(dir_path)
     tmp_name = "to_delete_" + short_md5(dir_name + str(time.time()))
-    with WorkingDir(parent or '.'):
+    with working_dir(parent or '.'):
         try:
             shutil.move(dir_name, tmp_name)
         except (WindowsError, IOError) as e:
@@ -219,7 +216,6 @@ def fix_filename(f_name):
 
 def increment_file_name(f_name):
     """
-    Modification function for GridFSManager.download_file_locally
     Add suffix to the TXT filename to avoid overwriting
      AF.txt -> AF_1.txt ... if AF_1.txt exists than AF_2.txt
     and so on
@@ -257,7 +253,7 @@ def increment_file_name_2(f_name):
 
     name, suffix, ext = split_f_name(os.path.basename(f_name))
 
-    with WorkingDir(dirname):
+    with working_dir(dirname):
         while os.path.exists(join_f_name(name, suffix, ext)):
             suffix += 1
         return j(dirname, join_f_name(name, suffix, ext))

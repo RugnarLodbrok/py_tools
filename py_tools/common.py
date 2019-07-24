@@ -6,7 +6,6 @@ from contextlib import contextmanager
 from functools import wraps
 from hashlib import md5
 from socket import gethostname, gethostbyaddr, gethostbyname, getaddrinfo, AF_INET6
-from threading import Timer
 
 WINDOWS = sys.platform == 'win32'
 LINUX = sys.platform == 'linux'
@@ -16,7 +15,7 @@ def identity(x):
     return x
 
 
-def retry(n=3, reraise=True, exception=None, sleep=None):
+def retry(n=3, reraise=True, exc_type=None, sleep=None):
     from py_tools import logger
     def dec(f):
         @wraps(f)
@@ -25,7 +24,7 @@ def retry(n=3, reraise=True, exception=None, sleep=None):
             for _ in range(n):
                 try:
                     return f(*args, **kwargs)
-                except exception or Exception as e:
+                except exc_type or Exception as e:
                     logger.info("sleep before retry", seconds=sleep, error=str(e), function=f.__name__)
                     err = e
                     if sleep:
@@ -39,17 +38,9 @@ def retry(n=3, reraise=True, exception=None, sleep=None):
     return dec
 
 
-class classproperty:
-    def __init__(self, getter):
-        self.getter = getter
-
-    def __get__(self, instance, owner):
-        return self.getter(owner)
-
-
-def file_md5(fname):
+def file_md5(f_name):
     h = md5()
-    with open(fname, 'rb') as f:
+    with open(f_name, 'rb') as f:
         for chunk in iter(lambda: f.read(4096), b''):
             h.update(chunk)
     return h.hexdigest()
@@ -74,16 +65,8 @@ def replace_bad_chars(data, method='replace'):
         raise TypeError("Bad data type: {}, {} or {} expected".format(type(data), str, bytes))
 
 
-class EmptyClass(object):
+class EmptyClass:
     pass
-
-
-def capitalize(s):
-    return s[0].upper() + s[1:]
-
-
-def get_letters(s):
-    return ''.join(re.split(r"[^a-zA-Z-]*", s.strip()))
 
 
 def format_dict(d, indent=''):
@@ -133,38 +116,9 @@ def discover_entities(module_name, cls):
                 yield obj
 
 
-class Timeout:
-    """
-    Usage:
-    with Timeout(t) as t:  # time in seconds
-        while t:
-            do something
-
-    Does something until time reaches t, then breaks the cycle.
-    """
-
-    def __init__(self, timeout):
-        self._is_timeout = False
-
-        if timeout:
-            def foo():
-                self._is_timeout = True
-
-            self._timer = Timer(timeout, function=foo)
-        else:
-            self._timer = None
-
-    def start(self):
-        if self._timer is not None:
-            self._timer.start()
-
-    def __enter__(self):
-        self.start()
-        return self
-
-    def __bool__(self):
-        return not self._is_timeout
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        if self._timer is not None and self._timer.is_alive():
-            self._timer.cancel()
+@contextmanager
+def timing(msg):
+    print(msg, '...', end='\r')
+    t0 = time.time()
+    yield
+    print(msg, time.time() - t0)

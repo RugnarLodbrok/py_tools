@@ -37,44 +37,6 @@ _QUOTE_CHARS_DICT = {
 }
 
 
-# @listify
-# def split_args(cmd) -> list:
-#     is_in_quotes = False
-#     instring_iter = iter(cmd)
-#     join_string = cmd[0:0]
-#
-#     c_list = []
-#     c = ' '
-#     while True:
-#         Skip whitespace
-#         try:
-#             while True:
-#                 if c not in _WORD_DIVIDERS:
-#                     break
-#                 c = next(instring_iter)
-#         except StopIteration:
-#             break
-#         Read word
-#         try:
-#             while True:
-#                 if not is_in_quotes and c in _WORD_DIVIDERS:
-#                     break
-#                 if c == '"':
-#                     is_in_quotes = not is_in_quotes
-#                     c = None
-#                 elif c == '\\':
-#                     c = next(instring_iter)
-#                     c = _QUOTE_CHARS_DICT.get(c)
-#                 if c is not None:
-#                     c_list.append(c)
-#                 c = next(instring_iter)
-#             yield join_string.join(c_list)
-#             c_list = []
-#         except StopIteration:
-#             yield join_string.join(c_list)
-#             break
-
-
 def split_args(cmd):
     return [x.strip('"') for x in re.findall(r'"[^"]+"|[^ ]+', cmd)]
 

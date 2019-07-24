@@ -8,15 +8,16 @@ except ImportError:
     from threading import _MainThread as MainThread
 
     main_thread = None
+
+
+    def is_main_thread():
+        return isinstance(current_thread(), MainThread)
 else:
     MainThread = None
 
 
-def is_main_thread():
-    if main_thread:
+    def is_main_thread():
         return current_thread() is main_thread()
-    else:
-        return isinstance(current_thread(), MainThread)
 
 
 class ExcToQueue:

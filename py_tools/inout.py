@@ -8,6 +8,11 @@ from io import StringIO
 from itertools import islice, chain, repeat
 from urllib.parse import urlsplit, urlunsplit, quote
 
+UTF8 = 'utf8'
+CP1252 = 'cp1252'
+UTF16 = 'utf16'
+ENCODINGS = (UTF8, CP1252, UTF16)
+
 
 def iter_csv_fd(f, columns=None, delimiter=','):
     r = csv.reader(f, delimiter=delimiter)
@@ -16,19 +21,13 @@ def iter_csv_fd(f, columns=None, delimiter=','):
             yield islice(chain(row, repeat(None)), columns)
 
 
-def iter_csv_file(f_name, columns=None, delimiter=','):
-    with open(f_name, 'rt') as f:
+def iter_csv_file(f_name, columns=None, delimiter=',', encoding=UTF8):
+    with open(f_name, 'rt', encoding=encoding) as f:
         yield from iter_csv_fd(f, columns, delimiter)
 
 
 def iter_csv_data(data, columns=None, delimiter=','):
     yield from iter_csv_fd(StringIO(data), columns, delimiter)
-
-
-UTF8 = 'utf8'
-CP1252 = 'cp1252'
-UTF16 = 'utf16'
-ENCODINGS = (UTF8, CP1252, UTF16)
 
 
 def read_text_file(f_name, encoding=None, guess_encoding=False, lines=False):
@@ -80,8 +79,10 @@ def stream_redirect(stdout=True, stderr=True):
     stream = StringIO()
     so = sys.stdout
     se = sys.stderr
-    sys.stdout = stream
-    sys.stderr = stream
+    if stdout:
+        sys.stdout = stream
+    if stderr:
+        sys.stderr = stream
     try:
         yield stream
     finally:

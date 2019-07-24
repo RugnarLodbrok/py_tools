@@ -19,6 +19,40 @@ def first(seq):
     return next(iter(seq))
 
 
+def first_or_none(seq):
+    try:
+        return next(iter(seq))
+    except StopIteration:
+        return None
+
+
+def one(seq, too_short=None, too_long=None):
+    """
+    one([]) -> exception
+    one([1]) -> 1
+    one([1, 2]) -> exception
+    :param seq:
+    :param too_short: exc_val
+    :param too_long: exc_val
+    :return:
+    """
+    it = iter(seq)
+
+    try:
+        value = next(it)
+    except StopIteration:
+        raise too_short or ValueError('too few items in iterable (expected 1)') from None
+
+    try:
+        next(it)
+    except StopIteration:
+        pass
+    else:
+        raise too_long or ValueError('too many items in iterable (expected 1)') from None
+
+    return value
+
+
 def rest(seq):
     i = iter(seq)
     next(i)
