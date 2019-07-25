@@ -220,3 +220,90 @@ def listify(fn=None, wrapper=list):
     if fn is None:
         return listify_return
     return listify_return(fn)
+
+
+def iter_plane(mode='rect', quad=True):
+    """
+    :param mode:
+    :param quad: iter only positive indices
+    """
+    if mode == 'rect':
+        if quad:
+            return _iter_plane_rect()
+        else:
+            raise NotImplementedError()
+    elif mode == 'triangle':
+        if quad:
+            return _iter_plane_triangle()
+        else:
+            raise NotImplementedError()
+    else:
+        raise ValueError(mode)
+
+
+def _make_pair(a, b, swap):
+    if swap:
+        return b, a
+    return a, b
+
+
+def _iter_plane_rect():
+    """
+    example: for 4x4:
+     1--2  9--10
+        |  |  |
+     4--3  8  11
+     |     |  |
+     5--6--7  12
+              |
+     16-15-14-13
+
+    :return: [1, 2, 3, 4, ..., 16]
+    """
+    i = 0
+    j = 0
+    r = 0
+    T = True
+
+    while True:
+        yield _make_pair(i, j, T)
+
+        for _ in range(r):
+            i += 1
+            yield _make_pair(i, j, T)
+        for _ in range(r):
+            j -= 1
+            yield _make_pair(i, j, T)
+        r += 1
+        i += 1
+        j, i = i, j
+        T = not T
+
+
+def _iter_plane_triangle():
+    """
+    example: for 4x4:
+     1--2  6--7
+      /  /  /
+     3  5  8
+     |/  /
+     4  9
+      /
+     10
+
+    :return: [1, 2, 3, 4, ..., 16]
+    """
+    i = 0
+    j = 0
+    T = True
+
+    while True:
+        while True:
+            yield _make_pair(i, j, T)
+            if j == 0:
+                break
+            j -= 1
+            i += 1
+        i += 1
+        i, j = j, i
+        T = not T
