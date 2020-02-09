@@ -1,5 +1,6 @@
-import inspect
+import os
 import sys
+import inspect
 import time
 from contextlib import contextmanager
 from functools import wraps
@@ -12,6 +13,12 @@ LINUX = sys.platform == 'linux'
 
 def identity(x):
     return x
+
+
+def add_to_pythonpath(file, steps_up=1):
+    sys.path.insert(1, os.path.normpath(os.path.join(
+        os.path.dirname(os.path.abspath(file)),
+        *(os.path.pardir for _ in range(steps_up)))))
 
 
 def retry(n=3, reraise=True, exc_type=None, sleep=None):
