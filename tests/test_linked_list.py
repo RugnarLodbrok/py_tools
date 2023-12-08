@@ -59,14 +59,16 @@ def test_pop_push_head(lst, expected):
 
 
 def test_pop_head_empty():
-    lst = LinkedList([])
+    lst: LinkedList[int] = LinkedList([])
     with pytest.raises(ValueError):
         lst.pop_head()
 
 
 def test_from_str():
-    lst = LinkedList.from_string('1->1->2->3->4->4->5->6', type_=int)
-    assert list(lst) == [1, 1, 2, 3, 4, 4, 5, 6]
+    lst = LinkedList.from_string('1->1->2->3->4->4->5->6')
+    assert list(lst) == list(map(str, [1, 1, 2, 3, 4, 4, 5, 6]))
+    lst2 = LinkedList.from_string('1->1->2->3->4->4->5->6', type_=int)
+    assert list(lst2) == [1, 1, 2, 3, 4, 4, 5, 6]
 
 
 def test_len():
@@ -78,13 +80,22 @@ def test_len():
 def test_reverse():
     lst = LinkedList(range(10))
     lst.reverse()
+
     assert list(lst) == [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
-    lst.reverse(node_before=lst.head.next.next.next)
+    lst.reverse(node_before=lst.head.next.next.next)  # type: ignore
     assert list(lst) == [9, 8, 7, 6, 0, 1, 2, 3, 4, 5]
     lst.reverse(n=4)
     assert list(lst) == [6, 7, 8, 9, 0, 1, 2, 3, 4, 5]
-    lst.reverse(node_before=lst.head.next.next.next, n=5)
+    lst.reverse(node_before=lst.head.next.next.next, n=5)  # type: ignore
     assert list(lst) == [6, 7, 8, 9, 4, 3, 2, 1, 0, 5]
+
+    lst = LinkedList()
+    lst.reverse()
+    assert not lst
+
+    lst = LinkedList([1, 2])
+    lst.reverse(node_before=lst.tail)
+    assert list(lst) == [1, 2]
 
 
 @pytest.mark.usefixtures('_fake_max_print_length')

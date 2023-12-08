@@ -1,4 +1,6 @@
-from typing import Any, Generic, Iterable, Iterator, Self, TypeVar
+from __future__ import annotations
+
+from typing import Any, Callable, Generic, Iterable, Iterator, Self, TypeVar, overload
 
 from py_tools.seq import isplit
 
@@ -7,17 +9,17 @@ T = TypeVar('T')
 
 class ListNode(Generic[T]):
     def __init__(self, x: T):
-        self.val = x
-        self.next = None
+        self.val: T = x
+        self.next: Self | None = None
 
-    def __iter__(self) -> Self:
-        curr = self
+    def __iter__(self) -> Iterator[Self]:
+        curr: Self | None = self
         while curr:
             yield curr
             curr = curr.next
 
     def __str__(self) -> str:
-        def iter_for_str():
+        def iter_for_str() -> Iterator[str]:
             seen = set()
             for i, node in enumerate(self):
                 if i >= MAX_PRINT_LENGTH:
@@ -36,23 +38,25 @@ class ListNode(Generic[T]):
 
 
 class LinkedList(Generic[T]):
-    def __init__(self, input_list: ListNode[T] | Iterable[T] | None = None):
-        self._head: ListNode | None = None
-        self._tail: ListNode | None = None
+    def __init__(self, input_list: Iterable[T] | None = None):
+        self._head: ListNode[T] | None = None
+        self._tail: ListNode[T] | None = None
         self._len = 0
         if input_list is not None:
             for x in input_list:
                 self.push_tail(x)
 
     @property
-    def head(self) -> ListNode | None:
+    def head(self) -> ListNode[T] | None:
         return self._head
 
     @property
-    def tail(self) -> ListNode | None:
+    def tail(self) -> ListNode[T] | None:
         return self._tail
 
-    def reverse(self, node_before: ListNode = None, n: int = None) -> None:
+    def reverse(
+        self, node_before: ListNode[T] | None = None, n: int | None = None
+    ) -> None:
         """
         Reverse in one pass;
         :param node_before: a node before the chunk to be reversed. Has role
@@ -61,20 +65,6 @@ class LinkedList(Generic[T]):
         :param n: number of nodes to be reversed
         :return:
         """
-        if node_before or (n is not None):
-            self._reverse_chunk(node_before, n)
-            return
-        self._tail = self._head
-        a = self._head
-        c = None
-        while a:
-            b = c
-            c = a
-            a = c.next
-            c.next = b
-        self._head = c
-
-    def _reverse_chunk(self, node_before: ListNode | None, n: int) -> None:
         if n is None:
             n = len(self)
         if node_before:
@@ -85,7 +75,7 @@ class LinkedList(Generic[T]):
         c = None
         while a:
             if not n:  # chunk ended
-                first_node.next = a
+                first_node.next = a  # type: ignore
                 break
             b = c
             c = a
@@ -99,7 +89,7 @@ class LinkedList(Generic[T]):
         else:
             self._head = c
 
-    def push_tail(self, v: T):
+    def push_tail(self, v: T) -> None:
         node = ListNode(v)
         if not self._tail:
             self._head = node
@@ -111,7 +101,7 @@ class LinkedList(Generic[T]):
     def pop_tail(self) -> T:
         raise NotImplementedError('not efficient')
 
-    def push_head(self, v: T):
+    def push_head(self, v: T) -> None:
         new_head = ListNode(v)
         new_head.next = self._head
         self._head = new_head
@@ -120,33 +110,49 @@ class LinkedList(Generic[T]):
         self._len += 1
 
     def pop_head(self) -> T:
-        if not self._len:
+        if not self._head:
             raise ValueError('empty')
-        r = self._head
-        self._head = r.next
+        old_head = self._head
+        self._head = old_head.next
         if not self._head:
             self._tail = None
         self._len -= 1
-        return r.val
+        return old_head.val
 
     @classmethod
-    def from_string(cls, s: str, type_: type = None) -> 'LinkedList':
+    @overload
+    def from_string(cls, string: str, type_: None = None) -> LinkedList[str]:
+        ...
+
+    @classmethod
+    @overload
+    def from_string(cls, string: str, type_: Callable[[str], T]) -> LinkedList[T]:
+        ...
+
+    @classmethod
+    @overload
+    def from_string(cls, string: str, type_: type[T]) -> LinkedList[T]:
+        ...
+
+    @classmethod
+    def from_string(cls, string: str, type_: Callable[[str], T] | None = None) -> Any:
         """
         example s: `1->1->2->3->4->4->5->6`
         """
-        r = LinkedList()
-        for v in isplit(s, '->'):
+        lst: LinkedList[T | str] = LinkedList()
+        for v in isplit(string, '->'):
             if type_ is not None:
-                v = type_(v)
-            r.push_tail(v)
-        return r
+                lst.push_tail(type_(v))
+            else:
+                lst.push_tail(v)
+        return lst
 
-    def __iter__(self) -> Iterator[Any]:
+    def __iter__(self) -> Iterator[T]:
         for node in self.nodes:
             yield node.val
 
     @property
-    def nodes(self) -> Iterator[ListNode]:
+    def nodes(self) -> Iterator[ListNode[T]]:
         if self._head:
             yield from iter(self._head)
 

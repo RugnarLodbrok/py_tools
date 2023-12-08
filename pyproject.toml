@@ -132,7 +132,7 @@ exclude_lines = [
 ]
 
 [tool.pylint]
-good-names = ["a", "b", "i", "j", "k", "v", "e", "n", "m", "q", "p", "x", "_", "pk", "id", "fn", "t", "t0", "t1", "f"]
+good-names = ["a", "b", "c", "i", "j", "k", "v", "e", "n", "m", "q", "p", "x", "_", "pk", "id", "fn", "t", "t0", "t1", "f"]
 class-rgx = "[A-Z_][a-zA-Z0-9]*$"
 generated-members = [
     "responses.*",
@@ -156,6 +156,7 @@ disable = [
     "R0801", # Similar lines in 2 files (duplicate-code)
     "W0707", # Consider explicitly re-raising using the 'from' keyword (raise-missing-from)
     "R0903", # Too few public methods (m/n) (too-few-public-methods)
+    "C0113", # allow `not not` instead of `bool()`
 ]
 max-module-lines = 300
 max-nested-blocks = 4
