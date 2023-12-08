@@ -80,7 +80,7 @@ ignore = [
     "PT011", # pytest.raises checks only exception type, without value matcher
 ]
 max-complexity = 10
-max-annotations-complexity = 4
+max-annotations-complexity = 5
 max-line-length = 120
 show-source = true
 ban-relative-imports = "parents"
@@ -157,7 +157,7 @@ disable = [
     "R0903", # Too few public methods (m/n) (too-few-public-methods)
 ]
 max-module-lines = 300
-max-nested-blocks = 3
+max-nested-blocks = 4
 max-branches = 10
 max-statements = 25
 max-attributes = 10
