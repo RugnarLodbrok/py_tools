@@ -1,14 +1,15 @@
+# pylint:disable=redefined-outer-name
 import pytest
 
-from py_tools.linked_list import LinkedList
 from py_tools import linked_list
+from py_tools.linked_list import LinkedList
 
 
 @pytest.fixture()
 def cycled_list():
     lst = LinkedList(range(4))
-    _, n1, _, n3, = lst.nodes
-    n3.next = n1
+    _, node1, _, node3 = lst.nodes
+    node3.next = node1
     return lst
 
 
@@ -31,12 +32,13 @@ def test_create():
     [
         (LinkedList(range(3)), [0, 1, 2, 8, 9]),
         (LinkedList([]), [8, 9]),
-    ]
+    ],
 )
 def test_push_tail(lst, expected):
     lst.push_tail(8)
     lst.push_tail(9)
     assert list(lst) == expected
+    assert lst.tail.val == 9
 
 
 @pytest.mark.parametrize(
@@ -44,7 +46,7 @@ def test_push_tail(lst, expected):
     [
         (LinkedList(range(3)), [8, 9, 0, 1, 2]),
         (LinkedList([]), [8, 9]),
-    ]
+    ],
 )
 def test_pop_push_head(lst, expected):
     initial = list(lst)
