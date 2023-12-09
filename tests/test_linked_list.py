@@ -2,7 +2,7 @@
 import pytest
 
 from py_tools import linked_list
-from py_tools.linked_list import LinkedList
+from py_tools.linked_list import Empty, LinkedList
 
 
 @pytest.fixture()
@@ -60,7 +60,7 @@ def test_pop_push_head(lst, expected):
 
 def test_pop_head_empty():
     lst: LinkedList[int] = LinkedList([])
-    with pytest.raises(ValueError):
+    with pytest.raises(Empty):
         lst.pop_head()
 
 
@@ -82,11 +82,11 @@ def test_reverse():
     lst.reverse()
 
     assert list(lst) == [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
-    lst.reverse(node_before=lst.head.next.next.next)  # type: ignore
+    lst.reverse(node_before=lst.head.next_node.next_node.next_node)
     assert list(lst) == [9, 8, 7, 6, 0, 1, 2, 3, 4, 5]
     lst.reverse(n=4)
     assert list(lst) == [6, 7, 8, 9, 0, 1, 2, 3, 4, 5]
-    lst.reverse(node_before=lst.head.next.next.next, n=5)  # type: ignore
+    lst.reverse(node_before=lst.head.next_node.next_node.next_node, n=5)
     assert list(lst) == [6, 7, 8, 9, 4, 3, 2, 1, 0, 5]
 
     lst = LinkedList()
@@ -104,3 +104,14 @@ def test_str(cycled_list):
     assert str(cycled_list) == '[0]->[1]->[2]->[3]->(loop)[1]'
     assert str(LinkedList([])) == '<Empty LL>'
     assert str(LinkedList()) == '<Empty LL>'
+
+
+def test_raise_empty():
+    lst = LinkedList([0])
+    with pytest.raises(Empty):
+        _ = lst.head.next_node
+    lst = LinkedList()
+    with pytest.raises(Empty):
+        _ = lst.head
+    with pytest.raises(Empty):
+        _ = lst.tail

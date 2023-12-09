@@ -7,10 +7,20 @@ from py_tools.seq import isplit
 T = TypeVar('T')
 
 
+class Empty(ValueError):
+    pass
+
+
 class ListNode(Generic[T]):
     def __init__(self, x: T):
         self.val: T = x
         self.next: Self | None = None
+
+    @property
+    def next_node(self) -> Self:
+        if self.next:
+            return self.next
+        raise Empty
 
     def __iter__(self) -> Iterator[Self]:
         curr: Self | None = self
@@ -47,12 +57,16 @@ class LinkedList(Generic[T]):
                 self.push_tail(x)
 
     @property
-    def head(self) -> ListNode[T] | None:
-        return self._head
+    def head(self) -> ListNode[T]:
+        if self._head:
+            return self._head
+        raise Empty
 
     @property
-    def tail(self) -> ListNode[T] | None:
-        return self._tail
+    def tail(self) -> ListNode[T]:
+        if self._tail:
+            return self._tail
+        raise Empty
 
     def reverse(
         self, node_before: ListNode[T] | None = None, n: int | None = None
@@ -111,7 +125,7 @@ class LinkedList(Generic[T]):
 
     def pop_head(self) -> T:
         if not self._head:
-            raise ValueError('empty')
+            raise Empty
         old_head = self._head
         self._head = old_head.next
         if not self._head:
