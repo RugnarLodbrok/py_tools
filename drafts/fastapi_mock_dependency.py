@@ -1,5 +1,5 @@
 import pytest
-from fastapi import FastAPI, Depends, Request, Header
+from fastapi import Depends, FastAPI, Header
 from fastapi.testclient import TestClient
 
 app = FastAPI()
@@ -10,7 +10,7 @@ def my_headers_dep(h1: str = Header('key1'), h2: str = Header('key2')):
     return h1, h2
 
 
-@app.get("/test")
+@app.get('/test')
 async def get_test(my_headers: tuple[str, str] = Depends(my_headers_dep)):
     return {'my_headers': my_headers}
 
