@@ -3,7 +3,6 @@ name = "py-tools"
 version = "0.1.0"
 description = ""
 authors = ["Rugnar Lodbrok <rugnarlodbrok@gmail.com>"]
-repository = ""
 packages = [
     { include = "py_tools" },
 ]
@@ -16,6 +15,8 @@ numpy = "^1.25.2"
 pydantic = "^1.10.12"
 
 [tool.poetry.group.dev.dependencies]
+autoflake = "^2.0.0"
+black = "^22.0.0"
 flake8 = "^6.0.0"
 #flake8-alembic = "^1.0.1"
 flake8-builtins = "^1.4"

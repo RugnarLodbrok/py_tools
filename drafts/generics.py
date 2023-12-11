@@ -1,5 +1,5 @@
-from typing import TypeVar, Generic, Iterator, Type
 from abc import ABC, abstractmethod
+from typing import Generic, Iterator, Type, TypeVar
 
 
 class BaseSchema:

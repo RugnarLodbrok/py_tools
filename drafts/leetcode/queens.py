@@ -27,7 +27,7 @@ Output: [
 ]
 Explanation: There exist two distinct solutions to the 4-queens puzzle as shown above.
 """
-from itertools import product, compress, count
+from itertools import compress, count, product
 from typing import Iterator
 
 from py_tools.dancing_links import dancing_lynx
