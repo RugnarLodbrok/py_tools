@@ -1,10 +1,22 @@
+from abc import abstractmethod
 from random import randint
+from typing import MutableSequence, Protocol, Self, TypeVar
 
 from py_tools.time import timing
 
 
-def qsort(arr):
-    def recur(start, end):
+class Comparable(Protocol):
+    @abstractmethod
+    def __lt__(self, other: Self) -> bool:
+        ...
+
+
+C = TypeVar('C', bound=Comparable)
+
+
+def qsort(arr: MutableSequence[C]) -> None:
+    def recur(start: int, end: int) -> None:
+        # todo: use median-of-three-approach
         i = start
         j = end
         side = 0
@@ -24,8 +36,8 @@ def qsort(arr):
     recur(0, len(a) - 1)
 
 
-def mergesort(arr):
-    def merge(start, mid, end):
+def mergesort(arr: MutableSequence[C]) -> None:
+    def _merge(start: int, mid: int, end: int) -> None:
         a = arr[start:mid]
         b = arr[mid:end]
         p = start
@@ -50,17 +62,17 @@ def mergesort(arr):
             p2 += 1
             p += 1
 
-    def recur(start, end):
+    def _recur(start: int, end: int) -> None:
         if end - start > 2:
             mid = (end + start) // 2
-            recur(start, mid)
-            recur(mid, end)
-            merge(start, mid, end)
+            _recur(start, mid)
+            _recur(mid, end)
+            _merge(start, mid, end)
         else:
             if arr[start] > arr[end - 1]:
                 arr[start], arr[start + 1] = arr[start], arr[start + 1]
 
-    recur(0, len(a))
+    _recur(0, len(a))
 
 
 if __name__ == '__main__':
@@ -84,11 +96,16 @@ if __name__ == '__main__':
 """
 merge 0.030498292117845268
 qsort 0.025943265575915576
-remove swap call
+
+inline swap function
 merge 0.02992545232642442
 qsort 0.025914575769566
+
 remove comment and unused func
 merge 0.029527431223541498
 qsort 0.025833900645375253
 
+add typing
+merge 0.03019101977115497
+qsort 0.026129616273101418
 """
