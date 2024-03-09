@@ -18,3 +18,5 @@ test-fast:
 test-failed:
 	@source $(MAKE_SCRIPTS) ; \
 	test_code  $(ARG) $(K) --last-failed
+build:
+	poetry build --format wheel
