@@ -79,8 +79,8 @@ def test_len():
 
 def test_reverse():
     lst = LinkedList(range(10))
-    lst.reverse()
 
+    lst.reverse()
     assert list(lst) == [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
     lst.reverse(node_before=lst.head.next_node.next_node.next_node)
     assert list(lst) == [9, 8, 7, 6, 0, 1, 2, 3, 4, 5]
