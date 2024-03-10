@@ -24,9 +24,10 @@ def test_basic(primary_constraints, solutions):
         'E': [2, 3, 6, 7],
         'F': [2, 7],
     }
-    assert frozenset(dancing_lynx(pieces, primary=primary_constraints)) == frozenset(
-        frozenset(solution) for solution in solutions
-    )
+    result = dancing_lynx(pieces, primary=primary_constraints)
+
+    expected = set(frozenset(solution) for solution in solutions)
+    assert set(result) == expected
 
 
 @pytest.mark.parametrize(
