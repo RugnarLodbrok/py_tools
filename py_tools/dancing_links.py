@@ -5,6 +5,7 @@ https://www.cs.mcgill.ca/~aassaf9/python/algorithm_x.html
 understanding primary and secondary constrains:
 http://www.nohuddleoffense.de/2019/01/20/dancing-links-algorithm-x-and-the-n-queens-puzzle/
 """
+
 from typing import Generic, Hashable, Iterator, Mapping, Sequence, TypeVar
 
 MAX_INT = 2147483647

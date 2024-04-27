@@ -5,7 +5,7 @@ import typing
 
 import pydantic as pd
 
-from py_tools.time import AnyDict
+from py_tools.common import AnyDict
 
 SHAPE_LOOKUP = {
     pd.fields.SHAPE_LIST: list,

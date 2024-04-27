@@ -16,7 +16,7 @@ from py_tools.primes import (
     primes,
 )
 from py_tools.seq import isplit, listify
-from py_tools.time import timing
+from py_tools.time_utils import timing
 
 PRIMES_FILE = Path(__file__).parent / 'primes_1_000_000.gz'
 PRIME_FACTORS_FILE = Path(__file__).parent / 'prime_factors.gz'

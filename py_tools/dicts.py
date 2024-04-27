@@ -2,7 +2,7 @@ from copy import deepcopy
 from functools import reduce
 from typing import Any, Callable, Hashable, Iterator, Tuple, TypeVar, overload
 
-from py_tools.time import AnyDict
+from py_tools.common import AnyDict
 
 T = TypeVar('T')
 V = TypeVar('V')
