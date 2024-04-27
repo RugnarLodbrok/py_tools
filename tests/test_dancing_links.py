@@ -26,7 +26,7 @@ def test_basic(primary_constraints, solutions):
     }
     result = dancing_lynx(pieces, primary=primary_constraints)
 
-    expected = set(frozenset(solution) for solution in solutions)
+    expected = {frozenset(solution) for solution in solutions}
     assert set(result) == expected
 
 
@@ -156,7 +156,7 @@ def queens(n: int) -> Iterator[frozenset[tuple[int, int]]]:
     for i, j in product(range(n), range(n)):
         pieces[(i, j)] = _queens_make_constraint(n, i, j)
 
-    pieces_compressed = {
+    pieces_compressed = {  # convert boolean mask to indices
         piece: list(compress(count(), slots_mask))
         for piece, slots_mask in pieces.items()
     }
