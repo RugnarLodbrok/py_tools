@@ -10,6 +10,7 @@ from py_tools.alg import (
     levenshtein_distance,
     levenshtein_distance2,
     levenshtein_distance_np,
+    round_to_significant,
 )
 
 
@@ -68,3 +69,14 @@ def test_gen_fractional_approx():
         (Fraction(-53, 69), 0.0001509661835748186),
         (Fraction(-96, 125), 0.0),
     ]
+
+
+def test_round_to_significant():
+    assert round_to_significant(125) == 120
+    assert round_to_significant(135) == 140
+    assert round_to_significant(1125) == 1100
+    assert round_to_significant(0.045832) == 0.046
+    assert round_to_significant(0.045832, n=3) == 0.0458
+    assert round_to_significant(0.0001509661835748186) == 0.00015
+    assert round_to_significant(-0.245892) == -0.25
+    assert round_to_significant(-0.255892) == -0.26

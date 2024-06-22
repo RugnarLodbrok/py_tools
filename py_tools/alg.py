@@ -1,5 +1,5 @@
 from fractions import Fraction
-from math import gcd
+from math import floor, gcd, log10
 from typing import Iterator
 
 import numpy as np
@@ -109,8 +109,13 @@ def gen_fractional_approx(x: float) -> Iterator[tuple[Fraction, float]]:
         delta = abs(approx - x)
         if not best_delta or (delta < best_delta):
             best_delta = delta
-            yield approx, best_delta / x
+            error = best_delta / x
+            yield approx, error
         if approx < x:
             num += 1
         else:
             den += 1
+
+
+def round_to_significant(x: float, n: int = 2) -> float:
+    return round(x, n - 1 - floor(log10(abs(x))))
