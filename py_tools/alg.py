@@ -91,18 +91,26 @@ def gen_rational_numbers() -> Iterator[Fraction]:
     pass  # pylint:disable=unnecessary-pass # pragma: no cover
 
 
-def gen_fractional_approx(n: float) -> Iterator[tuple[Fraction, float]]:
-    delta = None
-    num = 0
+def gen_fractional_approx(x: float) -> Iterator[tuple[Fraction, float]]:
+    if x == 0:
+        yield Fraction(0, 1), 0
+        return
+    if x < 0:
+        for approx, error in gen_fractional_approx(-x):
+            yield -approx, error
+        return
+
+    best_delta = x + 1
+    num = int(x)
     den = 1
 
-    while True:
-        rational = Fraction(num, den)
-        delta2 = abs(rational - n)
-        if not delta or (delta2 < delta):
-            delta = delta2
-            yield rational, n / delta
-        if rational < n:
+    while best_delta > 0:
+        approx = Fraction(num, den)
+        delta = abs(approx - x)
+        if not best_delta or (delta < best_delta):
+            best_delta = delta
+            yield approx, best_delta / x
+        if approx < x:
             num += 1
         else:
             den += 1
