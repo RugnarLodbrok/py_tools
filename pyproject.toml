@@ -79,6 +79,7 @@ ignore = [
     "W503", # line break before binary operator
     "W504", # Line break occurred after a binary operator
     "PT011", # pytest.raises checks only exception type, without value matcher
+    "R504", # unnecessary variable assignment before return statement
 ]
 max-complexity = 10
 max-annotations-complexity = 5
@@ -133,7 +134,7 @@ exclude_lines = [
 ]
 
 [tool.pylint]
-good-names = ["a", "b", "c", "i", "j", "k", "v", "e", "n", "m", "q", "p", "x", "_", "pk", "id", "fn", "t", "t0", "t1", "f"]
+good-names = ["a", "b", "c", "i", "j", "k", "v", "e", "n", "m", "q", "p", "x", "_", "pk", "id", "fn", "t", "t0", "t1", "f", "dt"]
 class-rgx = "[A-Z_][a-zA-Z0-9]*$"
 generated-members = [
     "responses.*",
@@ -158,6 +159,7 @@ disable = [
     "W0707", # Consider explicitly re-raising using the 'from' keyword (raise-missing-from)
     "R0903", # Too few public methods (m/n) (too-few-public-methods)
     "C0113", # allow `not not` instead of `bool()`
+    "comparison-with-callable", # pylint doesnt understand classproperties
 ]
 max-module-lines = 300
 max-nested-blocks = 4

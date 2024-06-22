@@ -25,7 +25,7 @@ class Swatch:
         t = self.time_function()
         dt = t - self.t
         self.t = t
-        return dt  # noqa: R504
+        return dt
 
     def wait(self, dt: float) -> None:
         t = self.time_function()
