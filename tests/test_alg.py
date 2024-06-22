@@ -22,7 +22,7 @@ from py_tools.alg import (
         levenshtein_distance2,
     ],
 )
-def test_levenshtein_distance_np(fn):
+def test_levenshtein_distance(fn):
     assert fn('apple', 'cracker') == 6
     assert fn('apple', 'appl') == 1
 
